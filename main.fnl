@@ -78,9 +78,11 @@
     (mode:enter)
     (set buffer {})))
 
+(local key-table {})
+
 (fn love.keyreleased [key scancode]
   (table.insert buffer (if
                         (= key "space") " "
                         (= key "backspace")
                         (do (table.remove buffer) nil)
-                        key)))
+                        (. key-table scancode))))
