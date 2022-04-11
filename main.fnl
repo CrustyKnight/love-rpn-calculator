@@ -78,7 +78,18 @@
     (mode:enter)
     (set buffer {})))
 
-(local key-table {})
+(local key-table {
+                  "a" :a
+                  "s" :o
+                  "d" :e
+                  "f" :u
+                  "g" :i
+                  "h" :d
+                  "j" :h
+                  "k" :t
+                  "l" :n
+                  ";" :s
+                  })
 
 (fn love.keyreleased [key scancode]
   (table.insert buffer (if

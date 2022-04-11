@@ -122,6 +122,7 @@ love.update = function(dt)
     return nil
   end
 end
+local key_table = {a = "a", s = "o", d = "e", f = "u", g = "i", h = "d", j = "h", k = "t", l = "n", [";"] = "s"}
 love.keyreleased = function(key, scancode)
   local function _14_()
     if (key == "space") then
@@ -130,7 +131,7 @@ love.keyreleased = function(key, scancode)
       table.remove(buffer)
       return nil
     else
-      return key
+      return key_table[scancode]
     end
   end
   return table.insert(buffer, _14_())
