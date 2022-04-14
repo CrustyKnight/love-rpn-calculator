@@ -7,9 +7,28 @@ end
 love.graphics.setFont(fira_code, 20)
 local fira_code_height = (fira_code:getHeight() + 3)
 local fira_code_width = fira_code:getWidth("W")
-love.window.setMode(fira_code:getWidth("\226\148\140\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\172\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\144"), (fira_code_height * 17))
+love.window.setMode(fira_code:getWidth("\226\148\140\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\172\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\172\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\144"), (fira_code_height * 17))
 local buffer = {}
-local stack = {}
+local stacks = {}
+stacks[1] = {}
+stacks[2] = {}
+local stack_num = 1
+local stack = stacks[1]
+local alt_stack = stacks[2]
+local function stack_swap()
+  local s1 = stack
+  local s2 = alt_stack
+  stack = s2
+  alt_stack = s1
+  if (stack_num == 1) then
+    stack_num = 2
+  elseif (stack_num == 2) then
+    stack_num = 1
+  else
+    stack_num = nil
+  end
+  return nil
+end
 local function push(s, val)
   return table.insert(s, val)
 end
@@ -30,32 +49,36 @@ local function draw_borders()
   for i = 1, 13 do
     psxy("\226\148\130", 40, i)
   end
-  psxy("\226\148\140\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\172\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\144", 0, 0)
-  psxy("\226\148\156\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\188\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\164", 0, 14)
-  psxy("\226\148\130                             \226\148\130         \226\148\130", 0, 15)
-  return psxy("\226\148\148\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\180\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\152", 0, 16)
+  for i = 1, 13 do
+    psxy("\226\148\130", 50, i)
+  end
+  psxy("\226\148\140\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\172\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\172\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\144", 0, 0)
+  psxy("\226\148\156\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\188\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\188\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\164", 0, 14)
+  psxy("\226\148\130                             \226\148\130         \226\148\130         \226\148\130", 0, 15)
+  return psxy("\226\148\148\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\180\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\180\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\128\226\148\152", 0, 16)
 end
 local function draw_number_stack_right_align(s, area)
-  local _let_2_ = area
-  local x = _let_2_["x"]
-  local y = _let_2_["y"]
-  local w = _let_2_["w"]
-  local h = _let_2_["h"]
+  local _let_3_ = area
+  local x = _let_3_["x"]
+  local y = _let_3_["y"]
+  local w = _let_3_["w"]
+  local h = _let_3_["h"]
   local start = (1 + (#s - h))
   for i = start, #s do
-    local _3_
+    local _4_
     if s[i] then
-      _3_ = string.format(("%" .. w .. "g"), s[i])
+      _4_ = string.format(("%" .. w .. "g"), s[i])
     else
-      _3_ = string.format(("%" .. w .. "s"), "nil")
+      _4_ = string.format(("%" .. w .. "s"), "nil")
     end
-    psxy(_3_, x, (y + (i - start)))
+    psxy(_4_, x, (y + (i - start)))
   end
   return nil
 end
 local function draw_basic()
   draw_borders()
-  return draw_number_stack_right_align(stack, {x = 31, y = 1, w = 8, h = 13})
+  draw_number_stack_right_align(stacks[1], {x = 31, y = 1, w = 8, h = 13})
+  return draw_number_stack_right_align(stacks[2], {x = 41, y = 1, w = 8, h = 13})
 end
 local mode = {}
 local modes = {}
@@ -63,9 +86,9 @@ local function set_mode(m)
   mode = modes[m]
   return nil
 end
-local function _5_(self)
+local function _6_(self)
   local str = buffer[1]
-  if (str == "a") then
+  if (str == "i") then
     return set_mode("num")
   elseif (str == "e") then
     return love.event.quit()
@@ -76,6 +99,14 @@ local function _5_(self)
   elseif (str == "d") then
     self["entry-number"] = 0
     return nil
+  elseif (str == "u") then
+    return pop(stack)
+  elseif (str == "a") then
+    return stack_swap()
+  elseif (str == "o") then
+    return push(alt_stack, pop(stack))
+  elseif (str == "n") then
+    return push(stack, pop(alt_stack))
   elseif (str == "s") then
     modes.sym["level"] = 0
     return set_mode("sym")
@@ -83,74 +114,78 @@ local function _5_(self)
     return nil
   end
 end
-local function _7_(self)
+local function _8_(self)
   draw_basic()
-  psxy("[a] number entry", 3, 3)
+  psxy("[i] number entry", 3, 3)
   psxy("[d] clear number entry", 3, 4)
   psxy("[e] quit", 3, 5)
   psxy("[s] symbol entry", 3, 6)
   psxy("[ ] push number onto stack", 3, 7)
+  psxy("[u] pop number off stack", 3, 8)
+  psxy("[a] swap active stack", 3, 9)
+  psxy("[o] number to alt-stack", 3, 10)
+  psxy("[n] number from alt-stack", 3, 11)
   psxy(string.format("%d", self["entry-number"]), 2, 15)
-  return psxy(table.concat(buffer), 31, 15)
+  return psxy((":" .. table.concat(buffer)), (21 + (10 * stack_num)), 15)
 end
-modes["home"] = {enter = _5_, draw = _7_, ["entry-number"] = 0}
-local function _8_(self)
+modes["home"] = {enter = _6_, draw = _8_, ["entry-number"] = 0}
+local function _9_(self)
   modes.home["entry-number"] = self["add-digit"](self["parse-digit-key"](self, buffer), modes.home["entry-number"])
   return set_mode("home")
 end
-local function _9_(digit, number)
+local function _10_(digit, number)
   return tonumber((tostring(number) .. tostring(digit)))
 end
-local function _10_(self, b)
+local function _11_(self, b)
   local num = 0
   for i, s in ipairs(b) do
-    local _11_
+    local _12_
     if (s == "a") then
-      _11_ = 7
+      _12_ = 7
     elseif (s == "o") then
-      _11_ = 5
+      _12_ = 5
     elseif (s == "e") then
-      _11_ = 3
+      _12_ = 3
     elseif (s == "u") then
-      _11_ = 1
+      _12_ = 1
     elseif (s == "i") then
-      _11_ = 9
+      _12_ = 9
     elseif (s == "d") then
-      _11_ = 0
+      _12_ = 0
     elseif (s == "h") then
-      _11_ = 2
+      _12_ = 2
     elseif (s == "t") then
-      _11_ = 4
+      _12_ = 4
     elseif (s == "n") then
-      _11_ = 6
+      _12_ = 6
     elseif (s == "s") then
-      _11_ = 8
+      _12_ = 8
     else
-      _11_ = ""
+      _12_ = ""
     end
-    num = self["add-digit"](_11_, num)
+    num = self["add-digit"](_12_, num)
   end
   return num
 end
-local function _13_()
+local function _14_()
   draw_basic()
   psxy("[7] [5] [3] [1] [9]", 3, 3)
   psxy("[a] [o] [e] [u] [i]", 3, 4)
   psxy("[0] [2] [4] [6] [8]", 3, 7)
   psxy("[d] [h] [t] [n] [s]", 3, 8)
-  return psxy(table.concat(buffer), 31, 15)
+  return psxy((":" .. table.concat(buffer)), (21 + (10 * stack_num)), 15)
 end
-modes["num"] = {enter = _8_, ["add-digit"] = _9_, ["parse-digit-key"] = _10_, draw = _13_}
+modes["num"] = {enter = _9_, ["add-digit"] = _10_, ["parse-digit-key"] = _11_, draw = _14_}
 local math_factorial
-local function _14_(n)
+local function _15_(n)
   if (n <= 0) then
     return 1
   else
     return (n * __fnl_global__math_2dfactorial((n - 1)))
   end
 end
-math_factorial = _14_
-local function _16_(self)
+math_factorial = _15_
+local function _17_(self)
   do
     local lvl = self.level
     local str = buffer[1]
@@ -244,7 +279,7 @@ local function _16_(self)
   end
   return nil
 end
-local function _21_(self)
+local function _22_(self)
   draw_basic()
   do
     local lvl = self.level
@@ -279,88 +314,88 @@ local function _21_(self)
     else
     end
   end
-  psxy(table.concat(buffer), 31, 15)
+  psxy((":" .. table.concat(buffer)), ((10 * stack_num) + 21), 15)
   return nil
 end
-local function _23_(s)
+local function _24_(s)
   return push(s, (pop(s) + pop(s)))
 end
-local function _24_(s)
+local function _25_(s)
   local b = pop(s)
   local a = pop(s)
   return push(s, (a - b))
 end
-local function _25_(s)
-  return push(s, (pop(s) * pop(s)))
-end
 local function _26_(s)
-  local b = pop(s)
-  local a = pop(s)
-  return push(s, (a / b))
+  return push(s, (pop(s) * pop(s)))
 end
 local function _27_(s)
   local b = pop(s)
   local a = pop(s)
-  return push(s, math.pow(a, b))
+  return push(s, (a / b))
 end
 local function _28_(s)
-  return push(s, math.sqrt(pop(s)))
+  local b = pop(s)
+  local a = pop(s)
+  return push(s, math.pow(a, b))
 end
 local function _29_(s)
-  return push(s, math.pow(pop(s), 2))
+  return push(s, math.sqrt(pop(s)))
 end
 local function _30_(s)
-  return push(s, (1 / pop(s)))
+  return push(s, math.pow(pop(s), 2))
 end
 local function _31_(s)
-  return push(s, math.sin(math.rad(pop(s))))
+  return push(s, (1 / pop(s)))
 end
 local function _32_(s)
-  return push(s, math.cos(math.rad(pop(s))))
+  return push(s, math.sin(math.rad(pop(s))))
 end
 local function _33_(s)
-  return push(s, math.tan(math.rad(pop(s))))
+  return push(s, math.cos(math.rad(pop(s))))
 end
 local function _34_(s)
-  return push(s, math.deg(math.asin(pop(s))))
+  return push(s, math.tan(math.rad(pop(s))))
 end
 local function _35_(s)
-  return push(s, math.deg(math.atan(pop(s))))
+  return push(s, math.deg(math.asin(pop(s))))
 end
 local function _36_(s)
-  return push(s, math.deg(math.acos(pop(s))))
+  return push(s, math.deg(math.atan(pop(s))))
 end
 local function _37_(s)
-  return push(s, math.log10(pop(s)))
+  return push(s, math.deg(math.acos(pop(s))))
 end
 local function _38_(s)
-  return push(s, math.pow(10, pop(s)))
+  return push(s, math.log10(pop(s)))
 end
 local function _39_(s)
-  return push(s, math.log(pop(s)))
+  return push(s, math.pow(10, pop(s)))
 end
 local function _40_(s)
-  return push(s, math.exp(pop(s)))
+  return push(s, math.log(pop(s)))
 end
 local function _41_(s)
-  return push(s, math_factorial(pop(s)))
+  return push(s, math.exp(pop(s)))
 end
 local function _42_(s)
-  return push(s, math.rad(pop(s)))
+  return push(s, math_factorial(pop(s)))
 end
 local function _43_(s)
-  return push(s, math.deg(pop(s)))
+  return push(s, math.rad(pop(s)))
 end
 local function _44_(s)
-  return push(s, math.pi)
+  return push(s, math.deg(pop(s)))
 end
 local function _45_(s)
-  return push(s, math.exp(1))
+  return push(s, math.pi)
 end
 local function _46_(s)
+  return push(s, math.exp(1))
+end
+local function _47_(s)
   return nil
 end
-modes["sym"] = {enter = _16_, draw = _21_, functions = {add = _23_, sub = _24_, mul = _25_, div = _26_, pow = _27_, sqrt = _28_, sqr = _29_, inv = _30_, sin = _31_, cos = _32_, tan = _33_, asin = _34_, atan = _35_, acos = _36_, log10 = _37_, TENxp = _38_, ln = _39_, exp = _40_, fac = _41_, rad = _42_, deg = _43_, pi = _44_, e = _45_, _NIL = _46_}, level = 0}
+modes["sym"] = {enter = _17_, draw = _22_, functions = {add = _24_, sub = _25_, mul = _26_, div = _27_, pow = _28_, sqrt = _29_, sqr = _30_, inv = _31_, sin = _32_, cos = _33_, tan = _34_, asin = _35_, atan = _36_, acos = _37_, log10 = _38_, TENxp = _39_, ln = _40_, exp = _41_, fac = _42_, rad = _43_, deg = _44_, pi = _45_, e = _46_, _NIL = _47_}, level = 0}
 set_mode("home")
 love.draw = function(love_draw_args)
   return mode:draw()
@@ -376,7 +411,7 @@ love.update = function(dt)
 end
 local key_table = {a = "a", s = "o", d = "e", f = "u", g = "i", h = "d", j = "h", k = "t", l = "n", [";"] = "s"}
 love.keyreleased = function(key, scancode)
-  local function _48_()
+  local function _49_()
     if (key == "space") then
       return " "
     elseif (key == "backspace") then
@@ -386,6 +421,6 @@ love.keyreleased = function(key, scancode)
       return key_table[scancode]
     end
   end
-  return table.insert(buffer, _48_())
+  return table.insert(buffer, _49_())
 end
 return love.keyreleased

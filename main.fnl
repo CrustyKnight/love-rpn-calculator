@@ -4,12 +4,25 @@
 (love.graphics.setFont fira-code 20)
 (local fira-code-height (+ (fira-code:getHeight) 3))
 (local fira-code-width  (fira-code:getWidth "W"))
-(love.window.setMode (fira-code:getWidth "┌─────────────────────────────┬─────────┐") (* fira-code-height 17))
+(love.window.setMode (fira-code:getWidth "┌─────────────────────────────┬─────────┬─────────┐") (* fira-code-height 17))
 ;;; }}}
 
 (var buffer [])
 
-(var stack [])
+(var stacks [])
+(tset stacks 1 [])
+(tset stacks 2 [])
+(var stack-num 1)
+(var stack     (. stacks 1))
+(var alt-stack (. stacks 2))
+
+(fn stack-swap []
+  (local s1 stack)
+  (local s2 alt-stack)
+  (set stack s2)
+  (set alt-stack s1)
+  (set stack-num (if (= stack-num 1) 2 (= stack-num 2) 1)))
+
 (fn push [s val] (table.insert s val))
 (fn pop  [s]     (table.remove s))
 
@@ -21,10 +34,11 @@
   (for [i 1 13] (psxy "│" 0 i))
   (for [i 1 13] (psxy "│" 30 i))
   (for [i 1 13] (psxy "│" 40 i))
-  (psxy "┌─────────────────────────────┬─────────┐" 0 0)
-  (psxy "├─────────────────────────────┼─────────┤" 0 14)
-  (psxy "│                             │         │" 0 15)
-  (psxy "└─────────────────────────────┴─────────┘" 0 16))
+  (for [i 1 13] (psxy "│" 50 i))
+  (psxy "┌─────────────────────────────┬─────────┬─────────┐" 0 0)
+  (psxy "├─────────────────────────────┼─────────┼─────────┤" 0 14)
+  (psxy "│                             │         │         │" 0 15)
+  (psxy "└─────────────────────────────┴─────────┴─────────┘" 0 16))
 
 (fn draw-number-stack-right-align [s area]
   (let [{: x : y : w : h} area
@@ -35,7 +49,10 @@
                 (string.format (.. "%" w "s") "nil" ))
                 x (+ y (- i start))))))
 
-(fn draw-basic [] (draw-borders) (draw-number-stack-right-align stack {:x 31 :y 1 :w 8 :h 13}))
+(fn draw-basic []
+  (draw-borders)
+  (draw-number-stack-right-align (. stacks 1) {:x 31 :y 1 :w 8 :h 13})
+  (draw-number-stack-right-align (. stacks 2) {:x 41 :y 1 :w 8 :h 13}))
 
 (var mode {})
 (var modes {})
@@ -43,21 +60,29 @@
   (set mode (. modes m)))
 (tset modes :home {
                    :enter (fn [self] (let [str (. buffer 1)]
-                                   (if (= str "a") (set-mode :num)
+                                   (if (= str "i") (set-mode :num)
                                        (= str "e") (love.event.quit)
                                        (= str " ") (do (push stack self.entry-number) (tset self :entry-number 0));push entry-number onto stack and set it to 0
                                        (= str "d") (tset self :entry-number 0)
+                                       (= str "u") (pop stack)
+                                       (= str "a") (stack-swap)
+                                       (= str "o") (push alt-stack (pop stack))
+                                       (= str "n") (push stack (pop alt-stack))
                                        (= str "s") (do (tset modes.sym :level 0) (set-mode :sym)))))
                    :draw  (fn [self]
                             (draw-basic)
                             ;; draw help
-                            (psxy "[a] number entry" 3 3)
+                            (psxy "[i] number entry" 3 3)
                             (psxy "[d] clear number entry" 3 4)
                             (psxy "[e] quit" 3 5)
                             (psxy "[s] symbol entry" 3 6)
                             (psxy "[ ] push number onto stack" 3 7)
+                            (psxy "[u] pop number off stack" 3 8)
+                            (psxy "[a] swap active stack" 3 9)
+                            (psxy "[o] number to alt-stack" 3 10)
+                            (psxy "[n] number from alt-stack" 3 11)
                             (psxy (string.format "%d" self.entry-number) 2 15)
-                            (psxy (table.concat buffer) 31 15))
+                            (psxy (.. ":" (table.concat buffer)) (+ 21 (* 10 stack-num)) 15))
                    :entry-number 0})
 
 (tset modes :num {
@@ -88,7 +113,7 @@
                                      (psxy "[a] [o] [e] [u] [i]" 3 4)
                                      (psxy "[0] [2] [4] [6] [8]" 3 7)
                                      (psxy "[d] [h] [t] [n] [s]" 3 8)
-                                     (psxy (table.concat buffer) 31 15))})
+                                     (psxy (.. ":" (table.concat buffer)) (+ 21 (* 10 stack-num)) 15))})
 
 ; default entry is in degrees, not radians.
 ; There is a function to convert from radians to degrees.
@@ -169,7 +194,7 @@
                                    (psxy "[t] pi"  3 8)
                                    (psxy "[n] e"  3 9)
                                    (psxy "[s] _NIL"  3 10))))
-                           (psxy (table.concat buffer) 31 15)
+                           (psxy (.. ":" (table.concat buffer)) (+ (* 10 stack-num) 21) 15)
                            nil)
                   :functions {
                               :add   (fn [s] (push s (+ (pop s) (pop s))))

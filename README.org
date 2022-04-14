@@ -2,3 +2,10 @@
 A small RPN calculator built with love2d and fennel
 
 ** TODO: How to use it and stuff
+
+* IDEA: 
+Make this have two stacks! then you also have a function to pop a value from
+one stack and put on another and vice versa.
+
+Then I will also need a function to switch the stack of focus / the stack the functions apply to.
+
