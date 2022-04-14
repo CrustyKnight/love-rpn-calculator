@@ -120,10 +120,10 @@
 ; Just use that
 ; I personally will probably be using degrees more often then radians, so thats
 ; the default
-(local math-factorial (fn [n]
-                        (if
-                         (<= n 0) 1
-                         (* n (math-factorial (- n 1))))))
+(fn math-factorial [n]
+  (if
+   (<= n 0) 1
+   (* n (math-factorial (- n 1)))))
 (tset modes :sym {
                   :enter (fn [self]
                            ;; do symbol action, unless space only, then advance layer

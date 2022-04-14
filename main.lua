@@ -176,16 +176,14 @@ local function _14_()
   return psxy((":" .. table.concat(buffer)), (21 + (10 * stack_num)), 15)
 end
 modes["num"] = {enter = _9_, ["add-digit"] = _10_, ["parse-digit-key"] = _11_, draw = _14_}
-local math_factorial
-local function _15_(n)
+local function math_factorial(n)
   if (n <= 0) then
     return 1
   else
-    return (n * __fnl_global__math_2dfactorial((n - 1)))
+    return (n * math_factorial((n - 1)))
   end
 end
-math_factorial = _15_
-local function _17_(self)
+local function _16_(self)
   do
     local lvl = self.level
     local str = buffer[1]
@@ -279,7 +277,7 @@ local function _17_(self)
   end
   return nil
 end
-local function _22_(self)
+local function _21_(self)
   draw_basic()
   do
     local lvl = self.level
@@ -317,85 +315,85 @@ local function _22_(self)
   psxy((":" .. table.concat(buffer)), ((10 * stack_num) + 21), 15)
   return nil
 end
-local function _24_(s)
+local function _23_(s)
   return push(s, (pop(s) + pop(s)))
 end
-local function _25_(s)
+local function _24_(s)
   local b = pop(s)
   local a = pop(s)
   return push(s, (a - b))
 end
-local function _26_(s)
+local function _25_(s)
   return push(s, (pop(s) * pop(s)))
 end
-local function _27_(s)
+local function _26_(s)
   local b = pop(s)
   local a = pop(s)
   return push(s, (a / b))
 end
-local function _28_(s)
+local function _27_(s)
   local b = pop(s)
   local a = pop(s)
   return push(s, math.pow(a, b))
 end
-local function _29_(s)
+local function _28_(s)
   return push(s, math.sqrt(pop(s)))
 end
-local function _30_(s)
+local function _29_(s)
   return push(s, math.pow(pop(s), 2))
 end
-local function _31_(s)
+local function _30_(s)
   return push(s, (1 / pop(s)))
 end
-local function _32_(s)
+local function _31_(s)
   return push(s, math.sin(math.rad(pop(s))))
 end
-local function _33_(s)
+local function _32_(s)
   return push(s, math.cos(math.rad(pop(s))))
 end
-local function _34_(s)
+local function _33_(s)
   return push(s, math.tan(math.rad(pop(s))))
 end
-local function _35_(s)
+local function _34_(s)
   return push(s, math.deg(math.asin(pop(s))))
 end
-local function _36_(s)
+local function _35_(s)
   return push(s, math.deg(math.atan(pop(s))))
 end
-local function _37_(s)
+local function _36_(s)
   return push(s, math.deg(math.acos(pop(s))))
 end
-local function _38_(s)
+local function _37_(s)
   return push(s, math.log10(pop(s)))
 end
-local function _39_(s)
+local function _38_(s)
   return push(s, math.pow(10, pop(s)))
 end
-local function _40_(s)
+local function _39_(s)
   return push(s, math.log(pop(s)))
 end
-local function _41_(s)
+local function _40_(s)
   return push(s, math.exp(pop(s)))
 end
-local function _42_(s)
+local function _41_(s)
   return push(s, math_factorial(pop(s)))
 end
-local function _43_(s)
+local function _42_(s)
   return push(s, math.rad(pop(s)))
 end
-local function _44_(s)
+local function _43_(s)
   return push(s, math.deg(pop(s)))
 end
-local function _45_(s)
+local function _44_(s)
   return push(s, math.pi)
 end
-local function _46_(s)
+local function _45_(s)
   return push(s, math.exp(1))
 end
-local function _47_(s)
+local function _46_(s)
   return nil
 end
-modes["sym"] = {enter = _17_, draw = _22_, functions = {add = _24_, sub = _25_, mul = _26_, div = _27_, pow = _28_, sqrt = _29_, sqr = _30_, inv = _31_, sin = _32_, cos = _33_, tan = _34_, asin = _35_, atan = _36_, acos = _37_, log10 = _38_, TENxp = _39_, ln = _40_, exp = _41_, fac = _42_, rad = _43_, deg = _44_, pi = _45_, e = _46_, _NIL = _47_}, level = 0}
+modes["sym"] = {enter = _16_, draw = _21_, functions = {add = _23_, sub = _24_, mul = _25_, div = _26_, pow = _27_, sqrt = _28_, sqr = _29_, inv = _30_, sin = _31_, cos = _32_, tan = _33_, asin = _34_, atan = _35_, acos = _36_, log10 = _37_, TENxp = _38_, ln = _39_, exp = _40_, fac = _41_, rad = _42_, deg = _43_, pi = _44_, e = _45_, _NIL = _46_}, level = 0}
 set_mode("home")
 love.draw = function(love_draw_args)
   return mode:draw()
@@ -411,7 +409,7 @@ love.update = function(dt)
 end
 local key_table = {a = "a", s = "o", d = "e", f = "u", g = "i", h = "d", j = "h", k = "t", l = "n", [";"] = "s"}
 love.keyreleased = function(key, scancode)
-  local function _49_()
+  local function _48_()
     if (key == "space") then
       return " "
     elseif (key == "backspace") then
@@ -421,6 +419,6 @@ love.keyreleased = function(key, scancode)
       return key_table[scancode]
     end
   end
-  return table.insert(buffer, _49_())
+  return table.insert(buffer, _48_())
 end
 return love.keyreleased
